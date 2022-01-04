@@ -44,8 +44,10 @@ namespace argxx {
            */
 
         } //end of for loop
-
-        db::ice_db::create_Db(dir_Db_Args.first, dir_Db_Args.second);
+        if(dir_Db_Args.first && dir_Db_Args.second)
+            db::ice_db::create_Db(dir_Db_Args.first, dir_Db_Args.second);
+        else
+            db::ice_db::create_Db();
     } //end of get_args
 
 
