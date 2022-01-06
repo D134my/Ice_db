@@ -1,6 +1,8 @@
 #ifndef ARGXX_H
 #define ARGXX_H
+
 #include <string_view>
+
 namespace argxx {
 
 class args {

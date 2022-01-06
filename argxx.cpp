@@ -1,11 +1,9 @@
 #include "argxx.h"
 #include "ice_db.h"
-#include <cstring>
-#include <experimental/filesystem>
 #include <fstream>
 #include <iostream>
-#include <map>
 #include <vector>
+
 namespace argxx {
 void args::check_Args(int argc, char **argv) {
   try {
