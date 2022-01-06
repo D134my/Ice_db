@@ -1,7 +1,9 @@
 #ifndef ICE_DB_H
 #define ICE_DB_H
+
 #include <experimental/filesystem>
 #include <map>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -21,7 +23,15 @@ public:
                        std::vector<std::string> const &,
                        std::vector<std::string> const &);
 
-  static void print_db(std::experimental::filesystem::path, int);
+  static void print_db(std::experimental::filesystem::path,
+                       std::span<const std::string> args);
+
+  static void append_db(std::experimental::filesystem::path,
+                        std::vector<std::string> const &,
+                        std::vector<std::string> const &);
+
+  static void remove_db(std::experimental::filesystem::path,
+                        std::vector<std::string> const &);
 
 private:
   const static inline std::string def_Path{"/home/ice/"};

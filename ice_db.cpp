@@ -1,8 +1,12 @@
 #include "ice_db.h"
 #include "argxx.h"
+#include <concepts>
 #include <experimental/filesystem>
 #include <fstream>
 #include <iostream>
+#include <span>
+#include <type_traits>
+#include <unordered_map>
 
 namespace fs = std::experimental::filesystem;
 
@@ -70,21 +74,114 @@ void ice_db::write_db(std::string_view db_Name,
   ofs.close();
 }
 
-void ice_db::print_db(std::experimental::filesystem::path p, int count) {
-  std::cout << "counter " << count << std::endl;
-  try {
-    std::ifstream ifs(p);
+void ice_db::print_db(std::experimental::filesystem::path p,
+                      std::span<const std::string> args) {
 
-    if (ifs.is_open())
+  std::ifstream ifs(p);
+  std::string return_key{};
+  std::string return_value{};
+
+  if (args.front() == "NULL") { // print whole db
+    if (ifs.is_open()) {
       std::cout << ifs.rdbuf();
-    else
-      throw ifs;
+      std::exit(EXIT_SUCCESS);
+    }
   }
 
-  catch (std::exception e) {
-    std::cerr << e.what() << std::endl;
+  for (auto const &word : args) {
+    ifs.clear();
+    ifs.seekg(0);
+
+    while (ifs) {
+      ifs >> return_key;
+      ifs >> return_value;
+      if (return_key == word) {
+        ifs >> return_value;
+        if (word == args.back()) {
+          std::cout << word << " -> " << return_value << std::endl;
+          ifs.close();
+          std::exit(EXIT_SUCCESS);
+        }
+        std::cout << return_key << " -> " << return_value << std::endl;
+      }
+    }
+  }
+  ifs.close();
+}
+
+void ice_db::append_db(std::experimental::filesystem::path p,
+                       std::vector<std::string> const &keys,
+                       std::vector<std::string> const &values) {
+  if (keys.size() == values.size()) {
+    std::ofstream ofs;
+    ofs.open(p, std::ios::app);
+    for (std::size_t i{}; i < keys.size(); ++i) {
+      try {
+        ofs << keys.at(i) << ' ';
+        ofs << values.at(i) << std::endl;
+      } catch (std::exception e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
+      }
+    }
+    ofs.close();
+
+  } else {
+    std::cerr << "kays and values don't have same size  \n";
     std::exit(EXIT_FAILURE);
   }
 }
 
+void ice_db::remove_db(std::experimental::filesystem::path p,
+                       const std::vector<std::string> &word) {
+  std::ifstream ifs;
+  std::ofstream ofs;
+
+  if (word.front() == "WHOLE") {
+    try {
+      fs::remove(p);
+      ofs.open(p, std::ios::out);
+      ofs << "";
+      std::exit(EXIT_SUCCESS);
+    } catch (...) {
+      std::cerr << "can't remove file !\n";
+      std::exit(EXIT_FAILURE);
+    }
+  }
+
+  std::string result_Of_Keys{};
+  std::string result_Values;
+
+  for (auto const &key : word) {
+    ifs.clear();
+    ifs.seekg(0);
+    try {
+      ifs.open(p, std::ios::in);
+      ofs.open(p.string() + ".tmp", std::ios::app);
+      while (ifs) {
+        ifs >> result_Of_Keys;
+        ifs >> result_Values;
+        if (result_Of_Keys != key) {
+          ofs << result_Of_Keys << ' ';
+          ofs << result_Values << std::endl;
+          if (result_Of_Keys == word.back()) {
+            ofs << result_Of_Keys << ' ';
+            ofs << result_Values << std::endl;
+            std::exit(EXIT_SUCCESS);
+          }
+        } else
+          continue;
+      }
+
+    } catch (std::exception e) {
+      std::cerr << "can't remove words " << __LINE__ << std::endl;
+      std::exit(EXIT_SUCCESS);
+    }
+    ifs.close();
+    ofs.close();
+
+    fs::remove(p);
+    fs::rename(p.string() + ".tmp", p);
+  }
+}
 } // namespace db

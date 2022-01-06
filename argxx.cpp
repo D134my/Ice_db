@@ -125,18 +125,70 @@ void args::get_Args(int argc, char **argv) {
     } // end of n check
 
     if (current_Arg == "-gd") {
-      bool result = is_Arg_Remained(argc, (index + 1));
-      if (result) {
+      bool result = is_Arg_Remained(argc, (index + 2));
+      if (!result) {
         auto has_icx = std::string(argv[index]).find(".icx");
         if (has_icx == std::string::npos)
           db::ice_db::print_db(dir + '/' + get_Dir_Add +
                                    std::string(argv[index + 1]) + ".icx",
-                               (argc - (index)));
+                               std::vector<std::string>(1, "NULL"));
         else
           db::ice_db::print_db(dir + '/' + get_Dir_Add +
                                    std::string(argv[index + 1]),
-                               (argc - index));
+                               std::vector<std::string>(1, "NULL"));
       }
+      std::vector<std::string> args_Shall_Print;
+      for (std::size_t i{2}; is_Arg_Remained(argc, (index + i)); ++i) {
+        args_Shall_Print.push_back(std::string(argv[index + i]));
+      }
+
+      db::ice_db::print_db(dir + '/' + get_Dir_Add +
+                               std::string(argv[index + 1]) + ".icx",
+                           args_Shall_Print);
+    }
+
+    if (current_Arg == "-ad") {
+      bool result = is_Arg_Remained(argc, (index + 1));
+      std::string db_name;
+      std::vector<std::string> keys;
+      std::vector<std::string> values;
+      if (result) {
+        db_name = argv[index + 1];
+      }
+      result = is_Arg_Remained(argc, (index + 2));
+      if (!result) {
+        std::cerr << "path, number of args, args...\n";
+        std::exit(EXIT_FAILURE);
+      }
+      int counter{};
+      int num_Arg = std::stoi(argv[index + 2]);
+      for (std::size_t i{1}; i <= num_Arg; ++i) {
+        keys.push_back(argv[index + 2 + i]);
+        counter = (index + 2 + i);
+      }
+
+      for (std::size_t i{1}; i <= num_Arg; ++i) {
+        values.push_back(argv[counter + i]);
+      }
+
+      db::ice_db::append_db(dir + '/' + get_Dir_Add +
+                                std::string(argv[index + 1]) + ".icx",
+                            keys, values);
+    }
+
+    if (current_Arg == "-r") {
+      bool result = is_Arg_Remained(argc, (index + 2));
+      std::vector<std::string> words_To_Remove;
+      if (!result) {
+        words_To_Remove.push_back("WHOLE");
+        db::ice_db::remove_db(dir + '/' + std::string(argv[index + 1]) + ".icx",
+                              words_To_Remove);
+      }
+      for (std::size_t i = index + 2; i <= argc - 1; ++i) {
+        words_To_Remove.push_back(argv[i]);
+      }
+      db::ice_db::remove_db(dir + '/' + std::string(argv[index + 1]) + ".icx",
+                            words_To_Remove);
     }
 
   } // end of for loop
