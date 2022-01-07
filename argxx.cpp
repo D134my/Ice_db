@@ -38,12 +38,13 @@ std::string get_Tmp_Dir(std::string &dir) {
 }
 
 void args::get_Args(int argc, char **argv) noexcept {
-  std::string get_Dir_Add;
+  std::string get_Dir_Add{}; // takes name of db
 
   std::string dir;
-  dir = get_Tmp_Dir(dir);
+  dir = get_Tmp_Dir(dir); // get the address of dir
 
-  auto is_Default_Path =
+  auto is_Default_Path = // if -c was not taken path and name use default path
+                         // and name
       std::make_pair(db::ice_db::dir_Info.first, db::ice_db::dir_Info.second);
 
   for (std::size_t index{1}; index < argc; ++index) {
@@ -53,9 +54,10 @@ void args::get_Args(int argc, char **argv) noexcept {
 
       bool result = is_Arg_Remained(argc, (index + 1));
       if (result) {
-
         auto is_Another_Arg = std::string_view(argv[index + 1]).find("-");
 
+        // if there is another argument and it's not a command - means command
+        // set the path for creating dir
         if (is_Another_Arg == std::string_view::npos)
           is_Default_Path.first = argv[index + 1];
         is_Default_Path.first += '/';
@@ -64,6 +66,8 @@ void args::get_Args(int argc, char **argv) noexcept {
       result = is_Arg_Remained(argc, (index + 2));
       if (result) {
         auto is_Another_Arg = std::string_view(argv[index + 2]).find("-");
+        // if there is another argument and it's not a command - means command
+        // set the path for creating dir name
         if (is_Another_Arg == std::string_view::npos)
           is_Default_Path.second = argv[index + 2];
       }
@@ -86,8 +90,10 @@ void args::get_Args(int argc, char **argv) noexcept {
     }
 
     if (current_Arg == "-n") {
-      int num_Arg;
+
+      int num_Arg{}; // takes number of arguments
       bool result = is_Arg_Remained(argc, (index + 1));
+
       if (result) {
         auto is_Another_Arg = std::string_view(argv[index + 1]).find("-");
         if (is_Another_Arg == std::string_view::npos) { // is convertable to int
@@ -95,20 +101,19 @@ void args::get_Args(int argc, char **argv) noexcept {
           try {
             num_Arg = std::stoi(argv[index + 1]);
           } catch (...) {
-            std::cerr << "bad arg";
+            std::cerr << "bad arg line : " << __LINE__ << '\n';
             std::exit(EXIT_FAILURE);
           } // end of catch
 
           bool result2 = is_Arg_Remained(argc, (index + num_Arg));
-          if (result2) {
-            std::cout << "yes ";
-          } else {
-            std::cerr << "no arguments passed";
+          if (!result2) {
+            std::cerr << "no arguments passed \n";
             std::exit(EXIT_FAILURE);
           }
 
-          std::vector<std::string> vec_Name_Arg;
-          std::vector<std::string> vec_Value_Arg;
+          std::vector<std::string> vec_Name_Arg;  // takes keys
+          std::vector<std::string> vec_Value_Arg; // takes values
+
           for (std::size_t i{1}; i <= num_Arg; ++i) {
             vec_Name_Arg.push_back(argv[index + 1 + i]);
           }
@@ -119,26 +124,33 @@ void args::get_Args(int argc, char **argv) noexcept {
               vec_Value_Arg.push_back(argv[index + 1 + num_Arg + j]);
             }
           }
-
+          // dir = address of directory of db + / + name of db + keys + values
           db::ice_db::write_db(dir + '/' + get_Dir_Add, vec_Name_Arg,
                                vec_Value_Arg);
         } // end of npos test
+      } else {
+
+        std::cerr << "give me number of arguments you want to pass \n";
+        std::exit(EXIT_FAILURE);
       }
     } // end of n check
 
     if (current_Arg == "-gd") {
       bool result = is_Arg_Remained(argc, (index + 2));
-      if (!result) {
+      if (!result) { // if no argument passed print whole db
         auto has_icx = std::string(argv[index]).find(".icx");
         if (has_icx == std::string::npos)
+          // if name of db had no .icx at the end you add it and then print it
           db::ice_db::print_db(dir + '/' + get_Dir_Add +
                                    std::string(argv[index + 1]) + ".icx",
                                std::vector<std::string>(1, "WHOLE"));
-        else
+        else {
           db::ice_db::print_db(dir + '/' + get_Dir_Add +
                                    std::string(argv[index + 1]),
                                std::vector<std::string>(1, "WHOLE"));
+        } // if name of db had .icx print it normaly
       }
+      // if argument passed !
       std::vector<std::string> args_Shall_Print;
       for (std::size_t i{2}; is_Arg_Remained(argc, (index + i)); ++i) {
         args_Shall_Print.push_back(std::string(argv[index + i]));
@@ -147,23 +159,30 @@ void args::get_Args(int argc, char **argv) noexcept {
       db::ice_db::print_db(dir + '/' + get_Dir_Add +
                                std::string(argv[index + 1]) + ".icx",
                            args_Shall_Print);
-    }
+    } // end of -gd check
 
     if (current_Arg == "-ad") {
       bool result = is_Arg_Remained(argc, (index + 1));
-      std::string db_name;
+      std::string db_name; // get db name which we shall append data to it
       std::vector<std::string> keys;
       std::vector<std::string> values;
+
       if (result) {
         db_name = argv[index + 1];
+      } else {
+        std::cerr << "give me database name ! \n";
+        std::exit(EXIT_FAILURE);
       }
+
       result = is_Arg_Remained(argc, (index + 2));
-      if (!result) {
+      if (!result) { // user passed db name but didn't pass number of args
         std::cerr << "path, number of args, args...\n";
         std::exit(EXIT_FAILURE);
       }
-      int counter{};
-      int num_Arg = std::stoi(argv[index + 2]);
+
+      int counter{}; // takes the first index of values
+      int num_Arg = std::stoi(argv[index + 2]); // number of args to append
+
       for (std::size_t i{1}; i <= num_Arg; ++i) {
         keys.push_back(argv[index + 2 + i]);
         counter = (index + 2 + i);
@@ -176,16 +195,18 @@ void args::get_Args(int argc, char **argv) noexcept {
       db::ice_db::append_db(dir + '/' + get_Dir_Add +
                                 std::string(argv[index + 1]) + ".icx",
                             keys, values);
-    }
+    } // end of -ad check
 
-    if (current_Arg == "-r") {
+    if (current_Arg == "-r") { // r means remove
       bool result = is_Arg_Remained(argc, (index + 2));
       std::vector<std::string> words_To_Remove;
-      if (!result) {
+
+      if (!result) { // if no argument passed remove whole db
         words_To_Remove.push_back("WHOLE");
         db::ice_db::remove_db(dir + '/' + std::string(argv[index + 1]) + ".icx",
                               words_To_Remove);
       }
+
       for (std::size_t i = index + 2; i <= argc - 1; ++i) {
         words_To_Remove.push_back(argv[i]);
       }
