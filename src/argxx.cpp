@@ -24,7 +24,7 @@ bool is_Arg_Remained(std::size_t argc, std::size_t arg) {
 }
 
 std::string get_Tmp_Dir(std::string &dir) {
-  //-c save dir path to a file this function gonna read it
+  //-c save dir path to a file this function gonna read it.
   std::string x_Path = getenv("HOME");
   std::experimental::filesystem::path Tmp_Path = x_Path + "/.Icxxx";
 
