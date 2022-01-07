@@ -48,7 +48,7 @@ void args::get_Args(int argc, char **argv) noexcept {
                          // and name
       std::make_pair(db::ice_db::dir_Info.first, db::ice_db::dir_Info.second);
 
-  for (std::size_t index{1}; index < argc; ++index) {
+  for (int index{1}; index < argc; ++index) {
     std::string_view current_Arg{argv[index]};
 
     if (current_Arg == "-h" || current_Arg == "--help") {
@@ -105,7 +105,7 @@ void args::get_Args(int argc, char **argv) noexcept {
 
           try {
             num_Arg = std::stoi(argv[index + 1]);
-          } catch (...) {
+          } catch (std::exception &e) {
             std::cerr << "bad arg line : " << __LINE__ << '\n';
             std::exit(EXIT_FAILURE);
           } // end of catch
@@ -119,11 +119,11 @@ void args::get_Args(int argc, char **argv) noexcept {
           std::vector<std::string> vec_Name_Arg;  // takes keys
           std::vector<std::string> vec_Value_Arg; // takes values
 
-          for (std::size_t i{1}; i <= num_Arg; ++i) {
+          for (int i{1}; i <= num_Arg; ++i) {
             vec_Name_Arg.push_back(argv[index + 1 + i]);
           }
 
-          for (std::size_t j{1}; j <= num_Arg; ++j) {
+          for (int j{1}; j <= num_Arg; ++j) {
             result = is_Arg_Remained(argc, (index + 1 + j));
             if (result) {
               vec_Value_Arg.push_back(argv[index + 1 + num_Arg + j]);
@@ -185,15 +185,21 @@ void args::get_Args(int argc, char **argv) noexcept {
         std::exit(EXIT_FAILURE);
       }
 
+      int num_Arg{};
       int counter{}; // takes the first index of values
-      int num_Arg = std::stoi(argv[index + 2]); // number of args to append
+      try {
+        num_Arg = std::stoi(argv[index + 2]); // number of args to append
+      } catch (std::exception &e) {
+        std::cerr << "Bad number ! \n";
+        std::exit(EXIT_FAILURE);
+      }
 
-      for (std::size_t i{1}; i <= num_Arg; ++i) {
+      for (int i{1}; i <= num_Arg; ++i) {
         keys.push_back(argv[index + 2 + i]);
         counter = (index + 2 + i);
       }
 
-      for (std::size_t i{1}; i <= num_Arg; ++i) {
+      for (int i{1}; i <= num_Arg; ++i) {
         values.push_back(argv[counter + i]);
       }
 
@@ -212,7 +218,7 @@ void args::get_Args(int argc, char **argv) noexcept {
                               words_To_Remove);
       }
 
-      for (std::size_t i = index + 2; i <= argc - 1; ++i) {
+      for (int i = index + 2; i <= argc - 1; ++i) {
         words_To_Remove.push_back(argv[i]);
       }
       db::ice_db::remove_db(dir + '/' + std::string(argv[index + 1]) + ".icx",

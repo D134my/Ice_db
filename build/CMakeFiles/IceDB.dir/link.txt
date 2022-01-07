@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/IceDB.dir/main.cpp.o CMakeFiles/IceDB.dir/src/ice_db.cpp.o CMakeFiles/IceDB.dir/src/argxx.cpp.o -o IceDB  -lstdc++fs 
