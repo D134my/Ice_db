@@ -202,7 +202,7 @@ void ice_db::help_db() noexcept {
   std::cout << "\n\t\t\t  	ICE DATABASE ^^ \t\n" << std::endl;
   std::cout << "-c   creates a directory for database   -> (dir_path, dir_name)"
             << std::endl;
-  std::cout << "-d   creates a database 		-> (dir_name)"
+  std::cout << "-d   creates a database 		-> (db_name)"
             << std::endl;
   std::cout << "-n   writes data to database  		-> (number of args, "
                "keys, "
