@@ -13,3 +13,4 @@ include_directories(src)
 
 add_executable(IceDB main.cpp ./src/ice_db.cpp ./src/argxx.cpp ./include/ice_db.hpp ./include/argxx.hpp)
 target_link_libraries(IceDB stdc++fs)
+install(TARGETS IceDB DESTINATION /usr/bin)
