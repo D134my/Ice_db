@@ -25,7 +25,7 @@ fs::path ice_db::create_dir(std::string_view dir_Path,
   ofs << d_Path.string(); // save path of db directory
 
   ofs.close();
-  return d_Path / ".Icxxx";
+  return d_Path;
 }
 
 fs::path ice_db::create_db(std::string_view db_Name,

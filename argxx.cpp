@@ -23,13 +23,18 @@ bool is_Arg_Remained(std::size_t argc, std::size_t arg) {
 }
 
 std::string get_Tmp_Dir(std::string &dir) {
+  //-c save dir path to a file this function gonna read it
   std::string x_Path = getenv("HOME");
   std::experimental::filesystem::path Tmp_Path = x_Path + "/.Icxxx";
 
-  std::ifstream ifs(Tmp_Path);
-  ifs >> dir;
-  std::cout << "dir is" << dir << std::endl;
-  return dir;
+  try {
+    std::ifstream ifs(Tmp_Path);
+    ifs >> dir;
+    return dir;
+  } catch (...) {
+    std::cerr << "can't read " << Tmp_Path << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
 }
 
 void args::get_Args(int argc, char **argv) noexcept {
@@ -62,7 +67,6 @@ void args::get_Args(int argc, char **argv) noexcept {
         if (is_Another_Arg == std::string_view::npos)
           is_Default_Path.second = argv[index + 2];
       }
-
       dir =
           db::ice_db::create_dir(is_Default_Path.first, is_Default_Path.second);
     }
