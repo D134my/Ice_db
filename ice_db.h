@@ -17,11 +17,14 @@ public:
   ice_db(ice_db const &) = delete;
   ice_db(ice_db &&) = delete;
 
-  [[maybe_unused]] static std::experimental::filesystem::path
+  [[maybe_unused]] [[nodiscard(
+      "take the path")]] static std::experimental::filesystem::path
   create_dir(std::string_view dir_Path = dir_Info.first,
              std::string_view dir_Name = dir_Info.second);
 
-  [[maybe_unused]] static std::experimental::filesystem::path
+  [[maybe_unused]] [[nodiscard(
+      "take the name!")]] static std::experimental::filesystem::path
+
   create_db(std::string_view db_Name = "Ice_DB.icx",
             std::string_view dir_Path = dir_Info.first);
 
@@ -41,6 +44,8 @@ public:
   [[maybe_unused]] static void
   remove_db(std::experimental::filesystem::path,
             std::vector<std::string> const &) noexcept;
+
+  [[maybe_unused]] static void help_db() noexcept;
 
 private:
   const static inline std::string def_Path{"/home/ice/"};

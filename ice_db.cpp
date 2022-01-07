@@ -194,4 +194,46 @@ void ice_db::remove_db(std::experimental::filesystem::path p,
     fs::rename(p.string() + ".tmp", p);
   }
 }
+
+void ice_db::help_db() noexcept {
+  // heh you can not read this method
+
+  std::system("clear");
+  std::cout << "\n\t\t\t  	ICE DATABASE ^^ \t\n" << std::endl;
+  std::cout << "-c   creates a directory for database   -> (dir_path, dir_name)"
+            << std::endl;
+  std::cout << "-d   creates a database 		-> (dir_name)"
+            << std::endl;
+  std::cout << "-n   writes data to database  		-> (number of args, "
+               "keys, "
+               "values)"
+            << std::endl;
+  std::cout << "-ad  appends to database	        -> (db_name, number "
+               "of args, keys, values)"
+            << std::endl;
+
+  std::cout << "-gd  gets database data             "
+               "    -> (db_name,args...[if no "
+               "arg passed prints whole db])"
+            << std::endl;
+  std::cout
+      << "-r   removes data from database         -> (db_name, args...[if no "
+         "arg passed removes whole db)"
+      << std::endl;
+
+  std::cout << "-h   help menu                          -> (nothing)"
+            << std::endl;
+
+  std::endl(std::cout);
+  std::cout << "EXAMPLES \n";
+  std::cout << "===================================================\n";
+  std::cout << "IceDB -c /tmp/ test -d my_DB -n 2 NAME AGE Ice 20 "
+            << std::endl;
+  std::cout << "===================================================\n";
+
+  std::endl(std::cout);
+
+  std::exit(EXIT_SUCCESS);
+}
+
 } // namespace db

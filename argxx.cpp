@@ -50,6 +50,10 @@ void args::get_Args(int argc, char **argv) noexcept {
   for (std::size_t index{1}; index < argc; ++index) {
     std::string_view current_Arg{argv[index]};
 
+    if (current_Arg == "-h" || current_Arg == "--help") {
+      db::ice_db::help_db();
+    }
+
     if (current_Arg == "-c") { //-c means create a database
 
       bool result = is_Arg_Remained(argc, (index + 1));
