@@ -14,7 +14,7 @@ sudo make install
 ## Usage
 ```
 -c   creates a directory for database   -> (dir_path, dir_name)
--d   creates a database                 -> (dir_name)
+-d   creates a database                 -> (db_name)
 -n   writes data to database            -> (number of args, keys, values)
 -ad  appends to database                -> (db_name, number of args, keys, values)
 -gd  gets database data                 -> (db_name,args...[if no arg passed prints whole db])
