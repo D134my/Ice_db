@@ -1,5 +1,5 @@
-#include "argxx.h"
-#include "ice_db.h"
+#include "argxx.hpp"
+#include "ice_db.hpp"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -11,6 +11,7 @@ void args::check_Args(int argc, char **argv) noexcept {
       throw argc;
   } catch (...) {
     std::cerr << "no argument passed !\n";
+    db::ice_db::help_db();
     std::exit(EXIT_FAILURE);
   }
 }

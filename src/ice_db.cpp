@@ -1,5 +1,5 @@
-#include "ice_db.h"
-#include "argxx.h"
+#include "ice_db.hpp"
+#include "argxx.hpp"
 #include <experimental/filesystem>
 #include <fstream>
 #include <iostream>

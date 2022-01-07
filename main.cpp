@@ -1,5 +1,5 @@
-#include "argxx.h"
-#include "ice_db.h"
+#include "argxx.hpp"
+#include "ice_db.hpp"
 
 int main(int argc, char **argv) {
 
