@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace argxx {
-void args::check_Args(int argc, char **argv) {
+void args::check_Args(int argc, char **argv) noexcept {
   try {
     if (argc == 1)
       throw argc;
@@ -23,8 +23,8 @@ bool is_Arg_Remained(std::size_t argc, std::size_t arg) {
 }
 
 std::string get_Tmp_Dir(std::string &dir) {
-  std::experimental::filesystem::path Tmp_Path =
-      std::experimental::filesystem::temp_directory_path() / ".Icxxx";
+  std::string x_Path = getenv("HOME");
+  std::experimental::filesystem::path Tmp_Path = x_Path + "/.Icxxx";
 
   std::ifstream ifs(Tmp_Path);
   ifs >> dir;
@@ -32,7 +32,7 @@ std::string get_Tmp_Dir(std::string &dir) {
   return dir;
 }
 
-void args::get_Args(int argc, char **argv) {
+void args::get_Args(int argc, char **argv) noexcept {
   std::string get_Dir_Add;
 
   std::string dir;
@@ -129,11 +129,11 @@ void args::get_Args(int argc, char **argv) {
         if (has_icx == std::string::npos)
           db::ice_db::print_db(dir + '/' + get_Dir_Add +
                                    std::string(argv[index + 1]) + ".icx",
-                               std::vector<std::string>(1, "NULL"));
+                               std::vector<std::string>(1, "WHOLE"));
         else
           db::ice_db::print_db(dir + '/' + get_Dir_Add +
                                    std::string(argv[index + 1]),
-                               std::vector<std::string>(1, "NULL"));
+                               std::vector<std::string>(1, "WHOLE"));
       }
       std::vector<std::string> args_Shall_Print;
       for (std::size_t i{2}; is_Arg_Remained(argc, (index + i)); ++i) {

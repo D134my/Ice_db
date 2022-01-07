@@ -7,9 +7,17 @@ namespace argxx {
 
 class args {
 public:
-  static void check_Args(int argc, char **argv);
-  static void get_Args(int argc, char **argv);
+  // a little bit optimization
+
+  args() = default;
+  ~args() = default;
+  args(args const &) = delete;
+  args(args &&) = delete;
+
+  static void check_Args(int argc, char **argv) noexcept;
+  static void get_Args(int argc, char **argv) noexcept;
 };
 bool is_Arg_Remained(std::size_t, std::size_t);
+
 } // namespace argxx
 #endif // ARGXX_H
