@@ -1,7 +1,0 @@
-/home/ice/Documents/git_Project/Ice_db/build/CMakeFiles/IceDB.dir
-/home/ice/Documents/git_Project/Ice_db/build/CMakeFiles/edit_cache.dir
-/home/ice/Documents/git_Project/Ice_db/build/CMakeFiles/rebuild_cache.dir
-/home/ice/Documents/git_Project/Ice_db/build/CMakeFiles/list_install_components.dir
-/home/ice/Documents/git_Project/Ice_db/build/CMakeFiles/install.dir
-/home/ice/Documents/git_Project/Ice_db/build/CMakeFiles/install/local.dir
-/home/ice/Documents/git_Project/Ice_db/build/CMakeFiles/install/strip.dir
