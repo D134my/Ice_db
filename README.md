@@ -27,7 +27,5 @@ IceDB -c /tmp/ test -d my_DB -n 2 NAME AGE Ice 20
 ===================================================
 ```
 
-## Demo
-![Ice_DB demo](icedb.gif)
 
  [![forthebadge](https://forthebadge.com/images/badges/made-with-c-plus-plus.svg)](https://forthebadge.com)
